@@ -2,6 +2,3 @@ azure-functions
 requests
 beautifulsoup4
 lxml
-feedparser
-python-dateutil
-pytz
