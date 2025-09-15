@@ -20,8 +20,8 @@ app = func.FunctionApp()
 
 # 기본 값 (환경변수로 덮어쓰기 가능)
 DEFAULT_CATEGORY_URL = os.getenv("CATEGORY_URL", "https://techcrunch.com/category/artificial-intelligence/")
-DEFAULT_LIMIT = int(os.getenv("LIMIT", "40"))
-DEFAULT_SLEEP = float(os.getenv("SLEEP_SEC", "0.7"))
+DEFAULT_LIMIT  = int(os.getenv("LIMIT", "40"))
+DEFAULT_SLEEP  = float(os.getenv("SLEEP_SEC", "0.7"))
 DEFAULT_TIMEOUT = int(os.getenv("TIMEOUT_SEC", "20"))
 DEFAULT_UA = os.getenv(
     "USER_AGENT",
@@ -50,10 +50,8 @@ def is_article_url(href: str) -> bool:
     try:
         u = urlparse(href)
         path = u.path or ""
-        return (
-            ("techcrunch.com" in (u.netloc or "") or (u.netloc or "") == "")
-            and re.search(r"/20\d{2}/\d{2}/", path) is not None
-        )
+        return (("techcrunch.com" in (u.netloc or "") or (u.netloc or "") == "")
+                and re.search(r"/20\d{2}/\d{2}/", path) is not None)
     except Exception:
         return False
 
@@ -147,7 +145,6 @@ def get_ldjson_article_body(soup: BeautifulSoup) -> Optional[str]:
     return None
 
 def extract_paragraphs(soup: BeautifulSoup) -> str:
-    # 기사 본문 컨테이너 추정: <article> 내부 p 수집(aside/figure/nav/footer 제외)
     article = soup.find("article") or soup
     paragraphs = []
     for p in article.find_all("p"):
@@ -221,15 +218,15 @@ def tc_crawl_http(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         qs = req.params
-        only_today = (qs.get("today") or "1").strip() == "1"
+        only_today  = (qs.get("today") or "1").strip() == "1"
         category_url = (qs.get("url") or DEFAULT_CATEGORY_URL).strip()
-        limit = _to_int(qs.get("limit"), DEFAULT_LIMIT, 1, 200)
-        sleep_sec = _to_float(qs.get("sleep"), DEFAULT_SLEEP, 0.0, 5.0)
+        limit      = _to_int(qs.get("limit"), DEFAULT_LIMIT, 1, 200)
+        sleep_sec  = _to_float(qs.get("sleep"), DEFAULT_SLEEP, 0.0, 5.0)
     except Exception:
-        only_today = True
+        only_today  = True
         category_url = DEFAULT_CATEGORY_URL
-        limit = DEFAULT_LIMIT
-        sleep_sec = DEFAULT_SLEEP
+        limit      = DEFAULT_LIMIT
+        sleep_sec  = DEFAULT_SLEEP
 
     try:
         if only_today:
