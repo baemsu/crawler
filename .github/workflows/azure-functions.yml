@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_NAME: "CrawlerTech"     # ← 실제 Function App 이름으로 교체 (예: CrawlerTech)
+  AZURE_FUNCTIONAPP_NAME: "CrawlerTech"     # ← 실제 Function App 이름으로 교체 (예: CrawlerTech)--
   AZURE_FUNCTIONAPP_PACKAGE_PATH: "."  # 프로젝트가 리포지토리 루트에 있을 때 "."
   PYTHON_VERSION: "3.11"
 
