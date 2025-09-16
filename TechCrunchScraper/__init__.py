@@ -20,7 +20,14 @@ import feedparser
 
 AI_FEED = "https://techcrunch.com/category/artificial-intelligence/feed/"
 
-KST = ZoneInfo("Asia/Seoul")
+#KST = ZoneInfo("Asia/Seoul")
+
+try:
+    from zoneinfo import ZoneInfo
+    KST = ZoneInfo("Asia/Seoul")
+except Exception:
+    from datetime import timedelta, timezone
+    KST = timezone(timedelta(hours=9))  # tzdata 미탑재 환경 대응
 
  
 
