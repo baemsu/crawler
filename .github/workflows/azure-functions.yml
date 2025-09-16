@@ -1,4 +1,4 @@
-name: Deploy Azure Function (Python)
+name: Deploy Azure Function (Python) - OIDC
 
 on:
   push:
@@ -6,24 +6,30 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_NAME: "CrawlerTech"     # ← 실제 Function App 이름으로 교체 (예: CrawlerTech)--
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: "."  # 프로젝트가 리포지토리 루트에 있을 때 "."
+  AZURE_FUNCTIONAPP_NAME: "CrawlerTech"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "."
   PYTHON_VERSION: "3.11"
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 의존성 설치는 Oryx 원격 빌드가 자동 처리 (로컬 pip 단계 넣지 않음)
+      - name: Login to Azure (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
